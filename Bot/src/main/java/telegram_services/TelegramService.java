@@ -25,8 +25,6 @@ import java.util.SimpleTimeZone;
  * Created by kuteynikov on 29.06.2017.
  */
 public class TelegramService extends TelegramLongPollingBot {
-    ReplyKeyboardMarkup mainKeyboard;
-
     private DbService dbService;
 
     public TelegramService(DbService dbService) {
@@ -72,9 +70,18 @@ public class TelegramService extends TelegramLongPollingBot {
 
     }
 
+    private void expiredSubscription(Update update) {
+
+    }
+
+    private void isSubscription(Update update) {
+
+    }
+
     private void startContext(Update update) {
         long chatID = update.getMessage().getChatId();
         SendMessage message = new SendMessage().setChatId(chatID);
+        String blabla = "\n .....тут всякое бла бла бла, жми купить подписку бла бла бла.....";
         String text;
         if (update.getMessage().getText().equals("/start")) {
             String firstName = update.getMessage().getChat().getFirstName();
@@ -84,13 +91,18 @@ public class TelegramService extends TelegramLongPollingBot {
             User user = new User(userID,userName,firstName,lastName,chatID);
             dbService.addUserInDb(user);
             System.out.println(" Добавлен новый пользователь:" + user);
-            text="Привет";
             if (firstName!=null){
-                text=text+", "+firstName+"!";
+                text="Привет, "+firstName+"!"+blabla;
             }else {
-                text=text+", человек, не укзавший имя в своём аккаунте! ";
+                text="Привет, человек, не укзавший имя в своём аккаунте! "+blabla;
             }
             message.setText(text);
+            message.setReplyMarkup(createMainMenu());
+        } else message.setText("Отпрваь  /start");
+        try {
+            sendMessage(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 
@@ -153,7 +165,7 @@ public class TelegramService extends TelegramLongPollingBot {
         }
         SendMessage sendMessage = new SendMessage(updateMessage.getChatId(),textMessage);
 
-        sendMessage.setReplyMarkup(mainKeyboard);
+        sendMessage.setReplyMarkup(createMainMenu());
         try {
             sendMessage(sendMessage);
         } catch (TelegramApiException e) {
@@ -161,8 +173,8 @@ public class TelegramService extends TelegramLongPollingBot {
         }
     }
 
-    public void createMainMenu(){
-        mainKeyboard = new ReplyKeyboardMarkup();
+    public ReplyKeyboardMarkup createMainMenu(){
+        ReplyKeyboardMarkup mainKeyboard = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow keyboardRow1 = new KeyboardRow();
         keyboardRow1.add(new KeyboardButton("Оформить подписку"));
@@ -173,6 +185,7 @@ public class TelegramService extends TelegramLongPollingBot {
         mainKeyboard.setKeyboard(keyboardRows);
         mainKeyboard.setOneTimeKeyboard(true);
         mainKeyboard.setResizeKeyboard(true);
+        return mainKeyboard;
     }
 
 

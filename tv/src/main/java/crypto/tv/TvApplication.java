@@ -13,6 +13,8 @@ import org.telegram.telegrambots.generics.LongPollingBot;
 public class TvApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TvApplication.class, args);
+		//SpringApplication.run(TvApplication.class, args);
+		SpringApplication.run(Bot.class,args);
+
 	}
 }

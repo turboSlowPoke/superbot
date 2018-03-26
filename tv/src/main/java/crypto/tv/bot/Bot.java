@@ -10,10 +10,10 @@ import javax.annotation.PostConstruct;
 
 @Component
 public class Bot extends TelegramLongPollingBot {
-    @PostConstruct
-    public void init() throws TelegramApiException {
-        sendApiMethod(new SendMessage(245480645l,"bot start"));
-    }
+  //  @PostConstruct
+ //   public void init() throws TelegramApiException {
+  //      sendApiMethod(new SendMessage(245480645l,"bot start"));
+  //  }
     @Override
     public void onUpdateReceived(Update update) {
         SendMessage sendMessage = new SendMessage(update.getMessage().getChatId(),"her"+update.getMessage().getChatId());
